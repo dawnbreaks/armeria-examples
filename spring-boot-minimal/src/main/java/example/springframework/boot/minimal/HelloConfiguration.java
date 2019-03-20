@@ -1,13 +1,14 @@
 package example.springframework.boot.minimal;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
+import com.linecorp.armeria.common.grpc.GrpcSerializationFormats;
 import com.linecorp.armeria.server.Server;
 import com.linecorp.armeria.server.docs.DocService;
+import com.linecorp.armeria.server.grpc.GrpcServiceBuilder;
 import com.linecorp.armeria.server.logging.AccessLogWriter;
 import com.linecorp.armeria.server.logging.LoggingService;
 import com.linecorp.armeria.spring.ArmeriaServerConfigurator;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * An example of a configuration which provides beans for customizing the server and client.
@@ -35,8 +36,10 @@ public class HelloConfiguration {
             builder.annotatedService(service);
 
             // You can also bind asynchronous RPC services such as Thrift and gRPC:
-            // builder.service(THttpService.of(...));
-            // builder.service(new GrpcServiceBuilder()...build());
+            builder.service(new GrpcServiceBuilder()
+              .addService(new ServiceOneGrpcImp())
+              .supportedSerializationFormats(GrpcSerializationFormats.values())
+              .enableUnframedRequests(true).build());
         };
     }
 }

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package serviceone;
+option java_outer_classname = "ServiceOneProto";
+option java_package = "me.lubin.proto.serviceone";
+
+service ServiceOne {
+    rpc sayHello(HelloOneReq) returns (HelloOneRsp);
+    rpc streamTest(stream HelloOneReq) returns (stream HelloOneRsp);
+}
+
+message HelloOneReq {
+     string greeting = 1;
+}
+
+message HelloOneRsp {
+    string greeting = 1;
+}
